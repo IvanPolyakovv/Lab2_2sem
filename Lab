@@ -87,7 +87,7 @@ void initializeArrayFromList(Node* head, int* arr, int size)
     }
 }
 
-Node* createDoublyLinkedList() 
+Node* createDoublyLinkedList(int* arr, int& sizeArr) 
 {
     Node* head = nullptr;
     Node* prevNode = nullptr;
@@ -104,6 +104,7 @@ Node* createDoublyLinkedList()
         for (int i = 0; i < size; i++)
         {
             int value = rand() % 100;
+            arr[i] = value;
             Node* newNode = createNode(value);
             if (head == nullptr)
             {
@@ -118,6 +119,7 @@ Node* createDoublyLinkedList()
             }
         }
         printDoublyLinkedList(head);
+        printArray(arr, size);
         return head;
     }
         break;
@@ -125,7 +127,7 @@ Node* createDoublyLinkedList()
         
     {
         int size = 1;
-        int* arr = new int[size];
+        int* arr = new int[sizeArr];
         cout << "Enter the value: ";
         cin >> arr[0];
         Node* newNode = createNode(arr[0]);
@@ -133,16 +135,18 @@ Node* createDoublyLinkedList()
         int i = 1;
         do
         {
+            sizeArr++;
             int value;
             cout << "Enter the value: ";
             cin >> value;
+            arr[sizeArr-1] = value;
             insertNode(&head, value, size - 1);
             cout << "Continue? 1 - Yes, 0 - No: ";
             cin >> end;
             i++;
         } while (end == true);
         printDoublyLinkedList(head);
-        printArray(arr, size);
+        printArray(arr, sizeArr);
         return head;
     }
         break;
@@ -298,12 +302,13 @@ int main() {
 
     start = steady_clock::now();
     cout << endl;
-    Node* head = createDoublyLinkedList();
+    Node* head = createDoublyLinkedList(arr, size);
     end = steady_clock::now();
     cout << "Doubly Linked List: ";
     printDoublyLinkedList(head);
     result = duration_cast<nanoseconds>(end - start);
     cout << "Time of creating the list: " << result.count() << " ns" << endl;
+    printArray(arr, size);
 
     char choice;
     do {
