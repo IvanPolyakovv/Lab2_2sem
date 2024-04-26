@@ -67,7 +67,34 @@ void insertNode(Node** head, int data, int position)
     }
 }
 
-Node* createDoublyLinkedList()
+void insertElement(int*& array, int& size, int index, int value) 
+{
+    int* newArray = new int[size + 1];
+
+    for (int i = 0; i < index; i++) 
+    {
+        newArray[i] = array[i];
+    }
+
+    newArray[index] = value;
+
+    for (int i = index + 1; i < size + 1; i++) 
+    {
+        newArray[i] = array[i - 1];
+    }
+
+    delete[] array;
+    array = newArray;
+    size++;
+    for (int i = 0; i < size; i++)
+    {
+        cout << array[i] << ' ';
+    }
+    cout << endl;
+}
+
+
+Node* createDoublyLinkedList(int& size)
 {
     Node* head = nullptr;
     Node* prevNode = nullptr;
@@ -78,7 +105,6 @@ Node* createDoublyLinkedList()
     {
     case '1':
     {
-        int size;
         cout << "Enter the size: ";
         cin >> size;
         for (int i = 0; i < size; i++)
@@ -103,7 +129,7 @@ Node* createDoublyLinkedList()
     case '2':
 
     {
-        int size = 1;
+        size = 1;
         int value;
         cout << "Enter the value: ";
         cin >> value;
@@ -124,6 +150,25 @@ Node* createDoublyLinkedList()
     default:
         return head;
     }
+}
+
+void createArray(Node*& head, int* arr, int size)
+{
+    Node* current = head;
+    for (int i = 0; i < size; i++)
+    {
+        if (current != nullptr)
+        {
+            arr[i] = current->data;
+            current = current->next;
+        }
+    }
+    cout << "Array: ";
+    for (int i = 0; i < size; i++)
+    {
+        cout << arr[i] << ' ';
+    }
+    cout << endl;
 }
 
 void deleteNode(Node** head, int index)
@@ -171,6 +216,31 @@ void deleteNode(Node** head, int index)
     delete current;
 }
 
+void deleteElement(int*& array, int& size, int index) 
+{
+    int* newArray = new int[size - 1];
+
+    for (int i = 0; i < index; i++) 
+    {
+        newArray[i] = array[i];
+    }
+
+    for (int i = index; i < size - 1; i++) 
+    {
+        newArray[i] = array[i + 1];
+    }
+
+    delete[] array;
+    array = newArray;
+    size--;
+
+    for (int i = 0; i < size; i++)
+    {
+        cout << array[i] << ' ';
+    }
+    cout << endl;
+}
+
 void swapNodes(Node*& head, int index1, int index2)
 {
     if (index1 == index2)
@@ -206,6 +276,15 @@ void swapNodes(Node*& head, int index1, int index2)
     node2->data = temp;
 }
 
+void swapElements(int* array, int index1, int index2) 
+{
+    int temp = array[index1];
+    array[index1] = array[index2];
+    array[index2] = temp;
+
+}
+
+
 int getValueAtIndex(Node*& head, int index) {
     Node* current = head;
     int i = 0;
@@ -218,6 +297,11 @@ int getValueAtIndex(Node*& head, int index) {
         return -1;
     }
     return current->data;
+}
+
+int getElementAtIndex(int* array, int index) 
+{
+    return array[index];
 }
 
 void findIndexes(Node* head, int value) {
@@ -234,19 +318,41 @@ void findIndexes(Node* head, int value) {
     }
 }
 
+void getIndexByValue(int* array, int size, int value) 
+{
+    for (int i = 0; i < size; i++) 
+    {
+        if (array[i] == value) 
+        {
+            cout << "Index of " << value << ": " << i + 1 << std::endl;
+            return;
+        }
+    }
+
+    std::cout << "Value " << value << " not found in the array" << std::endl;
+}
+
 int main() {
     time_point<steady_clock, duration<__int64, ratio<1, 1000000000>>> start, end;
     nanoseconds result;
-    int size = 0;
+    int size;
+    
 
     start = steady_clock::now();
     cout << endl;
-    Node* head = createDoublyLinkedList();
+    Node* head = createDoublyLinkedList(size);
     end = steady_clock::now();
     cout << "Doubly Linked List: ";
     printDoublyLinkedList(head);
     result = duration_cast<nanoseconds>(end - start);
     cout << "Time of creating the list: " << result.count() << " ns" << endl;
+    int* arr = new int[size];
+    start = steady_clock::now();
+    cout << endl;
+    int sizeArr = size;
+    createArray(head, arr, sizeArr);
+    result = duration_cast<nanoseconds>(end - start);
+    cout << "Time of creating the array: " << result.count() * (-1) << " ns" << endl;
 
     char choice;
     do {
@@ -256,6 +362,8 @@ int main() {
         switch (choice)
         {
         case '1':
+        {
+
             //insert in list
             int position;
             cout << "Position: ";
@@ -273,9 +381,18 @@ int main() {
             cout << "Time of insert: " << result.count() << " ns" << endl;
             //+
 
+            start = steady_clock::now();
+            cout << endl;
+            insertElement(arr, sizeArr, position - 1, value);
+            end = steady_clock::now();
+            result = duration_cast<nanoseconds>(end - start);
+            cout << "Time of insert: " << result.count() << " ns" << endl;
+        }
             break;
         case '2':
+        {
             //delete in list
+            int position;
             cout << "Position: ";
             cin >> position;
             start = steady_clock::now();
@@ -289,7 +406,13 @@ int main() {
             //+
 
             //delete in array
-
+            start = steady_clock::now();
+            cout << endl;
+            deleteElement(arr, sizeArr, position - 1);
+            end = steady_clock::now();
+            result = duration_cast<nanoseconds>(end - start);
+            cout << "Time of delete: " << result.count() << " ns" << endl;
+        }
             break;
         case '3':
             //swap in list
@@ -308,24 +431,42 @@ int main() {
             //+
 
             //swap in array
-
+            start = steady_clock::now();
+            cout << endl;
+            swapElements(arr, position1 - 1, position2 - 1);
+            end = steady_clock::now();
+            cout << "Array: ";
+            for (int i = 0; i < size; i++)
+            {
+                cout << arr[i] << ' ';
+            }
+            cout << endl;
+            result = duration_cast<nanoseconds>(end - start);
+            cout << "Time of swap: " << result.count() << " ns" << endl;
             break;
         case '4':
             //get value at index
+            int position;
             cout << "Position: ";
             cin >> position;
             start = steady_clock::now();
             cout << endl;
-            int index;
-            index = getValueAtIndex(head, position - 1);
-            cout << "Position: " << index << endl;
+            int value;
+            value = getValueAtIndex(head, position - 1);
+            cout << "Value: " << value << endl;
             end = steady_clock::now();
             result = duration_cast<nanoseconds>(end - start);
             cout << "Time: " << result.count() << " ns" << endl;
             //+
 
             //get value at index arr
-
+            start = steady_clock::now();
+            cout << endl;
+            value = getElementAtIndex(arr, position - 1);
+            end = steady_clock::now();
+            cout << "Value: " << value << endl;
+            result = duration_cast<nanoseconds>(end - start);
+            cout << "Time: " << result.count() << " ns" << endl;
             break;
         case '5':
             //get index at value
@@ -340,6 +481,12 @@ int main() {
             //+
 
             //get index at value arr
+            start = steady_clock::now();
+            cout << endl;
+            getIndexByValue(arr, sizeArr, value);
+            end = steady_clock::now();
+            result = duration_cast<nanoseconds>(end - start);
+            cout << "Time: " << result.count() << " ns" << endl;
             break;
         case 'e':
             return 0;
@@ -348,5 +495,6 @@ int main() {
             return -1;
         }
     } while (choice != 'e');
+    delete[] arr;
     return 0;
 }
