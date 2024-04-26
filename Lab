@@ -234,6 +234,7 @@ void deleteElement(int*& array, int& size, int index)
     array = newArray;
     size--;
 
+    cout << "Array: ";
     for (int i = 0; i < size; i++)
     {
         cout << array[i] << ' ';
@@ -332,6 +333,54 @@ void getIndexByValue(int* array, int size, int value)
     std::cout << "Value " << value << " not found in the array" << std::endl;
 }
 
+void bubbleSortNode(Node* head) {
+    int swapped;
+    Node* ptr1;
+    Node* lptr = nullptr;
+
+    if (head == nullptr)
+        return;
+
+    do {
+        swapped = 0;
+        ptr1 = head;
+
+        while (ptr1->next != lptr) {
+            if (ptr1->data > ptr1->next->data) {
+                int temp = ptr1->data;
+                ptr1->data = ptr1->next->data;
+                ptr1->next->data = temp;
+                swapped = 1;
+            }
+            ptr1 = ptr1->next;
+        }
+        lptr = ptr1;
+    } while (swapped);
+    cout << "List: ";
+    printDoublyLinkedList(head);
+}
+
+void bubbleSortArray(int* arr, int size) 
+{
+    for (int i = 0; i < size - 1; i++) 
+    {
+        for (int j = 0; j < size - i - 1; j++) 
+        {
+            if (arr[j] > arr[j + 1]) 
+            {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+    for (int i = 0; i < size; i++)
+    {
+        cout << arr[i] << ' ';
+    }
+    cout << endl;
+}
+
 int main() {
     time_point<steady_clock, duration<__int64, ratio<1, 1000000000>>> start, end;
     nanoseconds result;
@@ -356,7 +405,7 @@ int main() {
 
     char choice;
     do {
-        cout << "1. Insert element\n" << "2. Delete element\n" << "3. Swap elements\n" << "4. Get value at index\n" << "5. Get indexes at value\n" << "e. Exit.\n";
+        cout << "1. Insert element\n" << "2. Delete element\n" << "3. Swap elements\n" << "4. Get value at index\n" << "5. Get indexes at value\n" << "6. Bubble Sort (idz 1)\n" << "e. Exit.\n";
         cout << "Enter your choice: ";
         cin >> choice;
         switch (choice)
@@ -487,6 +536,25 @@ int main() {
             end = steady_clock::now();
             result = duration_cast<nanoseconds>(end - start);
             cout << "Time: " << result.count() << " ns" << endl;
+            break;
+        case '6':
+        {
+            start = steady_clock::now();
+            cout << endl;
+            bubbleSortNode(head);
+            end = steady_clock::now();
+            result = duration_cast<nanoseconds>(end - start);
+            cout << "Time of sort: " << result.count() << " ns" << endl;
+            //+
+
+            //delete in array
+            start = steady_clock::now();
+            cout << endl;
+            bubbleSortArray(arr, sizeArr);
+            end = steady_clock::now();
+            result = duration_cast<nanoseconds>(end - start);
+            cout << "Time of sort: " << result.count() << " ns" << endl;
+        }
             break;
         case 'e':
             return 0;
