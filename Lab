@@ -67,18 +67,18 @@ void insertNode(Node** head, int data, int position)
     }
 }
 
-void insertElement(int*& array, int& size, int index, int value) 
+void insertElement(int*& array, int& size, int index, int value)
 {
     int* newArray = new int[size + 1];
 
-    for (int i = 0; i < index; i++) 
+    for (int i = 0; i < index; i++)
     {
         newArray[i] = array[i];
     }
 
     newArray[index] = value;
 
-    for (int i = index + 1; i < size + 1; i++) 
+    for (int i = index + 1; i < size + 1; i++)
     {
         newArray[i] = array[i - 1];
     }
@@ -130,10 +130,6 @@ Node* createDoublyLinkedList(int& size)
 
     {
         size = 1;
-        int value;
-        cout << "Enter the value: ";
-        cin >> value;
-        Node* newNode = createNode(value);
         bool end = true;
         do
         {
@@ -143,7 +139,9 @@ Node* createDoublyLinkedList(int& size)
             insertNode(&head, value, size - 1);
             cout << "Continue? 1 - Yes, 0 - No: ";
             cin >> end;
+            size++;
         } while (end == true);
+        size--;
         return head;
     }
     break;
@@ -216,16 +214,16 @@ void deleteNode(Node** head, int index)
     delete current;
 }
 
-void deleteElement(int*& array, int& size, int index) 
+void deleteElement(int*& array, int& size, int index)
 {
     int* newArray = new int[size - 1];
 
-    for (int i = 0; i < index; i++) 
+    for (int i = 0; i < index; i++)
     {
         newArray[i] = array[i];
     }
 
-    for (int i = index; i < size - 1; i++) 
+    for (int i = index; i < size - 1; i++)
     {
         newArray[i] = array[i + 1];
     }
@@ -277,7 +275,7 @@ void swapNodes(Node*& head, int index1, int index2)
     node2->data = temp;
 }
 
-void swapElements(int* array, int index1, int index2) 
+void swapElements(int* array, int index1, int index2)
 {
     int temp = array[index1];
     array[index1] = array[index2];
@@ -300,7 +298,7 @@ int getValueAtIndex(Node*& head, int index) {
     return current->data;
 }
 
-int getElementAtIndex(int* array, int index) 
+int getElementAtIndex(int* array, int index)
 {
     return array[index];
 }
@@ -319,11 +317,11 @@ void findIndexes(Node* head, int value) {
     }
 }
 
-void getIndexByValue(int* array, int size, int value) 
+void getIndexByValue(int* array, int size, int value)
 {
-    for (int i = 0; i < size; i++) 
+    for (int i = 0; i < size; i++)
     {
-        if (array[i] == value) 
+        if (array[i] == value)
         {
             cout << "Index of " << value << ": " << i + 1 << std::endl;
             return;
@@ -360,13 +358,13 @@ void bubbleSortNode(Node* head) {
     printDoublyLinkedList(head);
 }
 
-void bubbleSortArray(int* arr, int size) 
+void bubbleSortArray(int* arr, int size)
 {
-    for (int i = 0; i < size - 1; i++) 
+    for (int i = 0; i < size - 1; i++)
     {
-        for (int j = 0; j < size - i - 1; j++) 
+        for (int j = 0; j < size - i - 1; j++)
         {
-            if (arr[j] > arr[j + 1]) 
+            if (arr[j] > arr[j + 1])
             {
                 int temp = arr[j];
                 arr[j] = arr[j + 1];
@@ -385,7 +383,7 @@ int main() {
     time_point<steady_clock, duration<__int64, ratio<1, 1000000000>>> start, end;
     nanoseconds result;
     int size;
-    
+
 
     start = steady_clock::now();
     cout << endl;
@@ -399,7 +397,7 @@ int main() {
     start = steady_clock::now();
     cout << endl;
     int sizeArr = size;
-    createArray(head, arr, sizeArr);
+    createArray(head, arr, size);
     result = duration_cast<nanoseconds>(end - start);
     cout << "Time of creating the array: " << result.count() * (-1) << " ns" << endl;
 
@@ -437,7 +435,7 @@ int main() {
             result = duration_cast<nanoseconds>(end - start);
             cout << "Time of insert: " << result.count() << " ns" << endl;
         }
-            break;
+        break;
         case '2':
         {
             //delete in list
@@ -462,7 +460,7 @@ int main() {
             result = duration_cast<nanoseconds>(end - start);
             cout << "Time of delete: " << result.count() << " ns" << endl;
         }
-            break;
+        break;
         case '3':
             //swap in list
             int position1, position2;
@@ -555,7 +553,7 @@ int main() {
             result = duration_cast<nanoseconds>(end - start);
             cout << "Time of sort: " << result.count() << " ns" << endl;
         }
-            break;
+        break;
         case 'e':
             return 0;
             break;
